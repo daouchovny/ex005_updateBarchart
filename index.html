@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>practice</title>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+</head>
+<body>
+    <input type="button" onclick="updateAdd()" value="新增">
+    <input type="button" onclick="updateDelete()" value="移除">
+    
+    <script>
+        var w=1000, h=300, p=100, g=3; 
+        var arr=[85, 60, 99, 49, 77, 59]; 
+        var body=d3.select("body"); 
+    
+        svg(); 
+        bind(arr);
+        render();
+        
+        // 製作畫布
+        function svg(){
+             d3.select("body").append("svg").attr({
+//            body.append("svg").attr({
+                width:w,
+                height:h
+            })
+        }
+        
+        function bind(dataSet){
+            var selection=
+            d3.select("svg").selectAll("rect").data(dataSet); 
+            selection.enter().append("rect"); 
+            selection.exit().remove(); 
+            
+            var selectionT=
+            d3.select("svg").selectAll("text").data(dataSet);
+            selectionT.enter().append("text");
+            selectionT.exit().remove();
+        }
+        
+        function render(){
+            d3.selectAll("text").attr({
+                x:function(d,i){
+                    return p+(40+g)*i+20;
+                }, 
+                y:function(d){
+                    return h-p+15;
+                },
+                "text-anchor":"middle"
+            }).text(function(d){
+                return d;
+            })
+            
+            d3.selectAll("rect").attr({
+                x:function(d,i){
+                     return p+(40+g)*i;
+                },
+                y:function(d){
+                    return h-p-d;
+                },
+                width:40, 
+                height:function(d){
+                    return d;
+                }, 
+                fill:function(d){
+                    if(d<70){
+                       return "red"
+                       }
+                    else{
+                       return "lightgreen" 
+                    }
+                }
+                
+            })
+        }
+        
+        function updateAdd(){
+            var num=random(20,100); 
+            arr.push(num); 
+            bind(arr); 
+            render();
+        }
+        
+        function updateDelete(){
+            var num=random(20,100);
+            arr.pop(num);
+            bind(arr);
+            render();
+        }
+        
+        function random(N,M){
+            return Math.floor(Math.random()*(M-N+1)+N); 
+        }
+    
+    </script>
+</body>
+</html>
